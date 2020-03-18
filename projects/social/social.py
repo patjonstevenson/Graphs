@@ -1,3 +1,5 @@
+import random
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -42,11 +44,29 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
+        # TODO
 
         # Add users
+        # Write a for loop that calls create user the right amount of times
+        for i in range(num_users):
+            self.add_user(f"User {i+1}")
 
         # Create friendships
+        # To create N random friendships
+        # you could create a list with all possible friendship combinations,
+        # shuffle the list, then grab the first N elements from the list.
+        possible_friendships = [(user_id, friend_id) 
+                                    for user_id in self.users 
+                                    for friend_id in range(user_id + 1, self.last_id + 1)]
+        # print(possible_friendships)
+        random.shuffle(possible_friendships)
+        # print(possible_friendships)
+        # Create n friendships where n = avg_friendships * num_users // 2
+        # avg_friendships = total_friendships / num_users
+        # total_friendships = avg_friendships * num_users
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
 
     def get_all_social_paths(self, user_id):
         """
@@ -58,7 +78,7 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        # TODO
         return visited
 
 
