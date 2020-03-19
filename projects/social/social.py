@@ -80,7 +80,7 @@ class SocialGraph:
         """
         paths = {user: [] for user in self.users}  # Note that this is a dictionary, not a set
         # TODO
-        
+        paths[user_id] = [user_id]
         for user in self.users:
             visited = {user: False for user in self.users}
             destination = user
