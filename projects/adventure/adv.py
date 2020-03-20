@@ -13,10 +13,10 @@ world = World()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
-map_file = "maps/test_cross.txt"
+# map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -96,10 +96,10 @@ print(visited)
 print(f"Condition: {len(list(filter(lambda x: x != {}, visited)))}")
 # while s.size() > 0:
 # while len(list(filter(lambda x: x != {}, visited))) > 0:
-
-# while unexplored(visited):
 count = -1
-while count < 20:
+while unexplored(visited):
+
+# while count < 20:
     count += 1
     # v = s.pop()
     print(f"Path: {traversal_path}")
@@ -120,25 +120,44 @@ while count < 20:
     # MAKE NEXT MOVE
     if move is not None:
         traversal_path.append(move)
+        s.push(move)
         player.travel(move)
     else:
+        old_move = s.pop()
         move = reverse_direction[old_move]
+        print("Let's go back... traveling " + move)
         traversal_path.append(move)
-        player.travel(reverse_direction[move])
+        player.travel(move)
     # print(f"Current Room: {curr.id}")
     # print(visited[curr.id])
+
+    # while move is None:
+    #     for dir in curr.get_exits():
+    #         print(f"Available Direction: {dir}")
+    #         print(f"Checking new move condition: {visited[curr.id][dir]}")
+    #         if visited[curr.id][dir] == '?':
+    #             print(f"Great! A new move to make! Let's go {dir}")
+    #             move = dir
+    #             break
+    #     move = reverse_direction[old_move]
+    #     print("Let's go back... traveling " + move)
+    #     traversal_path.append(move)
+    #     player.travel(move)
+
+
     
     prev = curr
     curr = player.current_room
     print(f"New Current: {curr.id}")
     visited[prev.id][move] = curr.id
-    visited[curr.id][reverse_direction[move]] = prev.id
+    # visited[curr.id][reverse_direction[move]] = prev.id
     print(f"Visited for {prev.id}: {visited[prev.id]}")
     exits = curr.get_exits()
     print(f"Exits: {exits}")
     if not visited[curr.id]:
         print(f"Ooh a new room: {curr.id}")
         visited[curr.id] = {e: '?' for e in exits}
+        visited[curr.id][reverse_direction[move]] = prev.id
         # print(f"Visited: {visited}")
         # print(f"Update to visited: {visited[curr.id]}")
     # if not exits or all([visited[curr.id][dir] != '?' for dir in exits]):
