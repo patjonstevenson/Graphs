@@ -27,45 +27,15 @@ world.print_rooms()
 
 player = Player(world.starting_room)
 
-# Fill this out with directions to walk
-# traversal_path = ['n', 'n']
-
-# reverse_direction = {
-#     'n': 's',
-#     's': 'n',
-#     'e': 'w',
-#     'w': 'e'
-# }
-# go_back = lambda x: list(map(lambda y: reverse_direction[y], x))[::-1]
-
-def go_back(dirs):
-    '''
-    Takes a list/set of directions {'n', 's', 'e', 'w'}
-    Returns a list/set with the directions in reverse order
-    and replaced with the opposite direction
-    eg ['n', 's', 'e', 'w'] => ['e', 'w', 'n', 's']
-    '''
-    reverse_direction = {
-        'n': 's',
-        's': 'n',
-        'e': 'w',
-        'w': 'e'
-    }
-    if str(type(dirs)) == "<class 'list'>":
-        return [reverse_direction[dir] for dir in dirs[::-1]]
-    elif str(type(dirs)) == "<class 'set'>":
-        return {reverse_direction[dir] for dir in dirs[::-1]}
-    else:
-        raise TypeError
-
-traversal_path = []
+# Get the number of rooms from the world object
 num_rooms = len(world.rooms)
+
+# Initialize our traversal path and visited lists
+traversal_path = []
 visited = [{} for num in range(num_rooms)]
-print(visited)
 
-# Stores directions back to any room visited from the current room
-room_map = {num: [] for num in range(num_rooms)}
-
+# Allows us to translate directions we've traveled into a
+#  path back to where we came from
 reverse_direction = {
         'n': 's',
         's': 'n',
@@ -73,7 +43,13 @@ reverse_direction = {
         'w': 'e'
 }
 
+# We will use this function to tell us when we are done exploring
 def unexplored(visited):
+    """
+    Takes visited list as input and returns
+     True if there are rooms we haven't explored, or
+     False if there are no rooms we haven't explored
+    """
     if {} in visited:
         return True
     for r in visited:
@@ -82,33 +58,30 @@ def unexplored(visited):
                 return True
     return False
 
+# We will use this stack to keep track of the moves we make
+#  so that we can go backwards when we hit a room with nowhere
+#  new to go.
 s = Stack()
-
+# Set up visited for starting room
 curr = player.current_room
 for dir in curr.get_exits():
-
-
     visited[curr.id][dir] = '?'
-    print(visited[curr.id][dir])
+
 
 move = None
-print(visited)
-print(f"Condition: {len(list(filter(lambda x: x != {}, visited)))}")
+# print(visited)
+# print(f"Condition: {len(list(filter(lambda x: x != {}, visited)))}")
 
 while unexplored(visited):
-
-    print(f"Path: {traversal_path}")
+    # Set up our moves for this iteration    
     old_move = move
     move = None
-    print(f"Current Room: {curr.id}")
-    print(f"Visited: {visited}")
-
+    
     # GET NEXT MOVE
+    # Go through current room's exits and find a
+    #  room that hasn't been explored
     for dir in curr.get_exits():
-        print(f"Available Direction: {dir}")
-        print(f"Checking new move condition: {visited[curr.id][dir]}")
         if visited[curr.id][dir] == '?':
-            print(f"Great! A new move to make! Let's go {dir}")
             move = dir
             break
     
@@ -117,25 +90,31 @@ while unexplored(visited):
         traversal_path.append(move)
         s.push(move)
         player.travel(move)
+    # GO BACK
+    # If there wasn't an exit for the current room that
+    #  we haven't explored, go back the way we came
     else:
         old_move = s.pop()
         move = reverse_direction[old_move]
-        print("Let's go back... traveling " + move)
         traversal_path.append(move)
         player.travel(move)
 
     
+    # MAKE UPDATES TO VISITED
+    # Update prev and curr room variables
     prev = curr
     curr = player.current_room
-    print(f"New Current: {curr.id}")
+    # Mark the direction we traveled as explored in the old
+    #  room and set to new room
     visited[prev.id][move] = curr.id
-    # visited[curr.id][reverse_direction[move]] = prev.id
-    print(f"Visited for {prev.id}: {visited[prev.id]}")
+    # Get our new exits
     exits = curr.get_exits()
-    print(f"Exits: {exits}")
+    # If current room hasn't been visited before,
     if not visited[curr.id]:
-        print(f"Ooh a new room: {curr.id}")
+        # Put its exits into visited with ? for unexplored
         visited[curr.id] = {e: '?' for e in exits}
+        # Mark the direction we just came from explored and
+        #  set to old room
         visited[curr.id][reverse_direction[move]] = prev.id
 
 
