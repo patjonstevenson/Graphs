@@ -86,7 +86,7 @@ s = Stack()
 
 curr = player.current_room
 for dir in curr.get_exits():
-    # s.push([dir])
+
 
     visited[curr.id][dir] = '?'
     print(visited[curr.id][dir])
@@ -94,14 +94,9 @@ for dir in curr.get_exits():
 move = None
 print(visited)
 print(f"Condition: {len(list(filter(lambda x: x != {}, visited)))}")
-# while s.size() > 0:
-# while len(list(filter(lambda x: x != {}, visited))) > 0:
-count = -1
+
 while unexplored(visited):
 
-# while count < 20:
-    count += 1
-    # v = s.pop()
     print(f"Path: {traversal_path}")
     old_move = move
     move = None
@@ -128,22 +123,6 @@ while unexplored(visited):
         print("Let's go back... traveling " + move)
         traversal_path.append(move)
         player.travel(move)
-    # print(f"Current Room: {curr.id}")
-    # print(visited[curr.id])
-
-    # while move is None:
-    #     for dir in curr.get_exits():
-    #         print(f"Available Direction: {dir}")
-    #         print(f"Checking new move condition: {visited[curr.id][dir]}")
-    #         if visited[curr.id][dir] == '?':
-    #             print(f"Great! A new move to make! Let's go {dir}")
-    #             move = dir
-    #             break
-    #     move = reverse_direction[old_move]
-    #     print("Let's go back... traveling " + move)
-    #     traversal_path.append(move)
-    #     player.travel(move)
-
 
     
     prev = curr
@@ -158,60 +137,6 @@ while unexplored(visited):
         print(f"Ooh a new room: {curr.id}")
         visited[curr.id] = {e: '?' for e in exits}
         visited[curr.id][reverse_direction[move]] = prev.id
-        # print(f"Visited: {visited}")
-        # print(f"Update to visited: {visited[curr.id]}")
-    # if not exits or all([visited[curr.id][dir] != '?' for dir in exits]):
-    #     # print("Going back")
-    #     player.travel(reverse_direction[move])
-        
-        # # BFS
-        # q = Queue()
-        # q.enqueue([curr])
-
-    # else: 
-        # for e in exits:
-            # player.travel(e)
-            # curr = player.current_room
-            # new_exits = curr.get_exits()
-            # visited[curr.id] = {e: '?' for e in new_exits}
-            # room_map[curr.id].append(e)
-            # s.push([*v, e])
-
-            # e_exits = e.get_exits()
-            # if not e_exits:
-                # e_exits 
-
-
-
-
-
-
-
-
-
-
-# DFT
-# s = Stack()
-# s.push([player.current_room])
-# vis = set()
-# while s.size() > 0:
-#     v = s.pop()
-#     # if not visited[v]:
-#     if v[-1] not in vis:
-#         exits = v[-1]
-#         vis.add(exits)
-#         for move in self.get_exits():
-#             player.travel()
-        
-#         visited[v] = {ex: '?' for ex in player.current_room.get_exits()}
-
-
-# q = Queue()
-# q.enqueue([player.current_room])
-# visited = {player.current_room}
-# while q.size() > 0:
-# for r in player.current_room.get_exits():
-    
 
 
 # TRAVERSAL TEST
